@@ -61,6 +61,7 @@ pub fn main() void {
     //
     // Here's a big hint: do you remember how to take a slice?
     const printable = foo.data[0..foo.length];
+    // const printable = foo.data[0..];
 
     print("{s}\n", .{printable});
 }

@@ -19,6 +19,8 @@ const Animal = enum {
 // know how big a pen we'll need) and a format string, like the "mlm" for
 // MouseLlama.
 fn makeCreature(comptime count: usize, comptime fmt: []const u8) [count]Animal {
+    // @compileLog(count);
+    // @compileLog(fmt);
 
     // Since not every animal is represented by a single character, we need to
     // track the state of things as we move along. For example, if we see an
@@ -27,14 +29,19 @@ fn makeCreature(comptime count: usize, comptime fmt: []const u8) [count]Animal {
         start, // Ready to start a new animal.
         l, // This means we've seen an "l", so if we see an "m", we know it's a Llama.
     };
-    var state = State.start;
+    // comptime var state = State.start;
+    comptime var state = State.start;
 
     // We return an array of animals representing the creature. (This is why we
     // really needed the 'count' parameter. Arrays need a size.)
-    var animals: [count]Animal = .{undefined} ** count;
-    var next_animal: usize = 0;
+    comptime var animals: [count]Animal = .{undefined} ** count;
+    comptime var next_animal: usize = 0;
 
+    // @compileLog(fmt);
     inline for (fmt) |char| {
+        // @compileLog(char);
+        // @compileLog(state);
+        // @compileLog(next_animal);
 
         // This is a good spot to add a @compileLog() call if you need to debug
         // any variables... (Come back here after you see main().)
@@ -56,7 +63,10 @@ fn makeCreature(comptime count: usize, comptime fmt: []const u8) [count]Animal {
                 //
                 // What do you think happens with Gators? Do they join with
                 // other animals or is this an error?
-                'g' => ???,
+                'g' => {
+                    animals[next_animal] = .Gator;
+                    next_animal += 1;
+                },
 
                 else => @compileError("No animal starts with '" ++ char ++ "'!"),
             },
@@ -68,7 +78,8 @@ fn makeCreature(comptime count: usize, comptime fmt: []const u8) [count]Animal {
                     next_animal += 1;
                     // Something is missing here. After we finish a Llama, we
                     // need to be ready to _start_ over with a new animal...
-                    ???
+
+                    state = .start;
                 },
 
                 else => @compileError("Only llamas start with 'l'!"),
